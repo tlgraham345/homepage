@@ -24,7 +24,7 @@ services:
     image: caddy:latest
     container_name: caddy-homepage
     ports:
-      - "4000:3000"
+      - "4000:4000"
     volumes:
       - ./caddy:/etc/caddy
     environment:
