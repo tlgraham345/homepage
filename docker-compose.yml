@@ -1,4 +1,7 @@
 version: "3.9"
+networks:
+	home-net:
+		driver: bridge
 services:
   homepage:
     image: ghcr.io/gethomepage/homepage:latest
@@ -6,9 +9,26 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-    ports:
-      - 4000:3000
+    expose:
+      - 3000
     volumes:
       - ./homepage/config:/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
     restart: unless-stopped
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    ports:
+      - "4000:3000"
+    volumes:
+      - ./caddy:/etc/caddy
+    environment:
+      - ADMIN_USER=${ADMIN_USER:-admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+      - ADMIN_PASSWORD_HASH=${ADMIN_PASSWORD_HASH:-JDJhJDE0JE91S1FrN0Z0VEsyWmhrQVpON1VzdHVLSDkyWHdsN0xNbEZYdnNIZm1pb2d1blg4Y09mL0ZP}
+    restart: unless-stopped
+    networks:
+      - home-net
+    labels:
+      org.label-schema.group: "homepage"
