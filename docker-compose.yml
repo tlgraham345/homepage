@@ -14,18 +14,18 @@ services:
     volumes:
       - ./homepage/config:/config # Make sure your local config directory exists
       - /var/run/docker.sock:/var/run/docker.sock:ro # optional, for docker integrations
-  restart: unless-stopped
-	networks:
-	  - home-net
-	labels:
-		org.label-schema.group: "homepage"
+    restart: unless-stopped
+    networks:
+      - home-net
+    labels:
+      org.label-schema.group: "homepage"
 
   caddy:
     image: caddy:latest
     container_name: caddy
     ports:
       - "4000:3000"
-      volumes:
+    volumes:
       - ./caddy:/etc/caddy
     environment:
       - ADMIN_USER=${ADMIN_USER:-admin}
